@@ -2,7 +2,7 @@ const express=require('express');
 const morgan=require('morgan');
 const app=express();
 const tourRouter=require('./tourRoutes');
-//middlewares
+//middleware
 if(process.env.NODE_ENV==='development')
 {
     app.use(morgan('dev'));
