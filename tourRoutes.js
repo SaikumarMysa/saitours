@@ -1,10 +1,10 @@
 const express=require('express');
 const router=express.Router();
-const tourController=require('./tourController');
+const tourController=require('./controllers/tourController');
 
 router.route('/top-5-cheapTours').get(tourController.aliasTopTours,tourController.getAllTours)
 router.route('/tourStats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan); 
 
 router
 .route('/')
