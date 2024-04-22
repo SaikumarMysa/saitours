@@ -32,11 +32,12 @@ exports.getAllTours=catchAsync(async(req,res,next)=>{
 )
 //Retriving document by passing id
 exports. getTour=catchAsync(async(req,res,next)=>{
-   
+   console.log('hii 1')
     const tour=await Tour.findById(req.params.id);
-
+    console.log('hii 2')
      //adding 404
      if(!tour){
+        console.log('hii 3')
         return next(new AppError('No tour found with that ID',404))
     }
     res.status(200).json({
@@ -74,7 +75,7 @@ exports. updatedTour=catchAsync(async(req,res,next)=>{
 //C:Create
 exports. createTour=catchAsync(async(req,res,next)=>{
     const newTour=await Tour.create(req.body);
-
+    console.log('ml')
     if(!tour){
         return next(new AppError('No tour found with that ID',404))
     }
