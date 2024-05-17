@@ -34,8 +34,6 @@ const sendErrorDev=(err,res)=>{
 })
 }
 const sendErrorProd=(err,res)=>{
-    // console.log('hey in sendErrorprod1')
-    // console.log('isOperational:', err.isOperational);
     if (err.isOperational) {
         res.status(err.statusCode).json({
           status: err.status,
@@ -53,8 +51,6 @@ const sendErrorProd=(err,res)=>{
 
 }
 module.exports=(err,req,res,next)=>{
-    // console.log('Error handled:', err);
-    // console.log('Error is an instance of AppError:', err instanceof AppError);
     err.statusCode=err.statusCode||500;
     err.status=err.status||'error';
     //console.log(`hiiii ${process.env.NODE_ENV==='production'}`);

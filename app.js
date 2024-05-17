@@ -7,6 +7,7 @@ const rateLimit=require('express-rate-limit');
 const app=express();
 const tourRouter=require('./routes/tourRoutes');
 const userRouter=require('./routes/userRoutes');
+const reviewRouter=require('./routes/reviewRoutes');
 const AppError=require('./utils/appError');
 const globalErrorHandler=require('./controllers/errorController');
 //Global Middlewares
@@ -28,24 +29,20 @@ const limiter=rateLimit({
 app.use('/api',limiter);
 //Body parser, reading data from body into req.body
 app.use(express.json({limit:'10kb'}));
-/* app.use((req,res,next)=>{
-    console.log('Hello from middleware')
-    next();
-}) */
-
 //Data sanitization against NoSQL query injection
 app.use(mongosanitize());
 //Data sanitization against xss
 app.use(xss());
 app.use((req,res,next)=>{
     req.requestTime=new Date().toISOString();
-    console.log(req.headers);
+    //console.log(req.headers);
     next();
 })
 
 //Routes
 app.use('/api/v1/tours/',tourRouter);
 app.use('/api/v1/users/',userRouter);
+app.use('/api/v1/reviews/',reviewRouter);
 
 app.all('*',(req,res,next)=>{
     next(new AppError(`Can't find ${req.originalUrl} on this server!`,404));

@@ -5,10 +5,12 @@ const AppError=require('./../utils/appError')
 const User=require('./../models/userModel');
 const catchAsync=require('./../utils/catchAsync');
 const sendEmail=require('./../utils/email')
+
 const signToken=id=>{
     return jwt.sign({id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
 
 }
+
 const createSendToken=(user,statusCode,res)=>{
     const token=signToken(user._id);
     
@@ -38,17 +40,9 @@ exports.signup=catchAsync(async(req,res,next)=>{
         passwordConfirm:req.body.passwordConfirm,
         role: req.body.role
     });
-    //const token=signToken(newUser._id)
     createSendToken(newUser,201,res);
-    //const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
-    /* res.status(201).json({
-        status:'success',
-        token,
-        data:{
-            user:newUser
-        }
-    }) */
 });
+
 //LOGIN
 exports.login=async(req,res,next)=>{
 const{email,password}=req.body;
@@ -64,13 +58,9 @@ if(!user||!(await user.correctPassword(password,user.password))){
  return next(new AppError('Incorrect email or password',401))
 }
 //3.If everything is ok then send a token
-/* const token= signToken(user._id);
-res.status(200).json({
-    status:'success',
-    token
-}) */
 createSendToken(user,200,res);
 }
+
 //PROTECT ROUTES
 //1) Getting token and check of it's there
     exports.protect=catchAsync(async(req,res,next)=>{
@@ -78,7 +68,7 @@ createSendToken(user,200,res);
     if (req.headers.authorization&&req.headers.authorization.startsWith('Bearer')) {
         token=req.headers.authorization.split(' ')[1];
     }
-    console.log(token)
+    //console.log(token)
     if(!token){
         return next(new AppError('You are not logged in!! Please log in  to get access.',401));
     }
@@ -98,15 +88,17 @@ createSendToken(user,200,res);
     req.user=currentUser;
     next();
 })
+
 //RESTRICT TO
 exports.restrictTo=(...roles)=>{
     return (req,res,next)=>{
         if(!roles.includes(req.user.role)){
-            return next(new AppError('You donot have permission to perform this action',403));
+            return next(new AppError('You do not have permission to perform this action',403));
         }
         next();
     }
 }
+
 //FORGOT PASSWORD
 exports.forgotPassword=catchAsync(async(req,res,next)=>{
     //1.Get user based on posted email
@@ -160,13 +152,9 @@ user.passwordResetExpires=undefined;
 //await user.save();
 //3.update changedpasswordAt property for the user
 //4.log the user in ,send jwt
-/* const token=signToken(user._id)
-res.status(200).json({
-    status:'success',
-    token
-}) */
 createSendToken(user,200,res);
 }
+
 //UPDATE CURRENT USER PASSWORD
 exports.updatePassword=async (req,res,next)=>{
     //1.Get user from collection
